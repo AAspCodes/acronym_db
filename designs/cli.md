@@ -1,4 +1,4 @@
-# Text User Interface
+# Command Line Interface
 
 ## Overview
 
