@@ -23,5 +23,5 @@ A yaml file will work as the "Database"
 
 ## Risk Analysis
 
-- What rust package to use to read and write yaml files?
+- What rust package to use to read and write yaml files? serde_yaml
 - Is it possible to modify the file in line with out read the entire contents and then overwriting back the entire contents?
