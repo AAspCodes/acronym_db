@@ -1,7 +1,7 @@
 pub mod db;
-
+pub mod cli;
 fn main() {
     println!("Hello, world!");
-    db::db_test();
-    // return;
+
+    cli::read_args();
 }
