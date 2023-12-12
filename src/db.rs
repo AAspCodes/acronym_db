@@ -3,7 +3,7 @@ use serde_yaml;
 use std::fs::File;
 use std::collections::HashMap;
 
-const DB_PATH: &str = "./db.yaml";
+const DB_PATH: &str = "./data/db.yaml";
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Entry {
@@ -11,6 +11,11 @@ pub struct Entry {
     description: String,
 }
 
+impl Entry {
+    pub fn new(acronym: String, description: String) -> Entry {
+        Entry{acronym, description}
+    }
+}
 
 pub fn db_test() {
     let foo:Entry = Entry {
@@ -42,5 +47,14 @@ pub fn write_entries(entries: HashMap<String, Entry>) {
 
 
 pub fn read_entries() -> HashMap<String,Entry> {
-    serde_yaml::from_reader(File::open(DB_PATH).unwrap()).unwrap()
+    match File::open(DB_PATH) {
+        Ok(f) => serde_yaml::from_reader(f).unwrap(),
+        Err(e) => {
+            match e.kind() {
+                std::io::ErrorKind::NotFound => HashMap::new(),
+                _ => panic!("{}",e),
+            }
+        }
+    }
 }
+
