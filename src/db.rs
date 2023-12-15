@@ -1,10 +1,16 @@
 use serde::{Serialize, Deserialize};
 use serde_yaml;
+use tempfile::Builder;
 use std::fs::File;
 use std::collections::HashMap;
+use std::path::PathBuf;
 
-const DB_PATH: &str = "./data/db.yaml";
+// const DB_PATH: &str = "./data/db.yaml";
+const DB_PATH: &str = &"./data/db.yaml";
 
+fn get_db_path() -> PathBuf {
+    return PathBuf::from(DB_PATH);
+}
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Entry {
     acronym: String,
@@ -23,38 +29,55 @@ impl Entry {
     }
 }
 
+#[test]
+pub fn db_test() {
+    let foo = Entry::new(String::from("TLA"), String::from("Three Letter Acronym"));
+    let bar = Entry::new(String::from("CIA"), String::from("Central Intelligence Agency"));
 
-// pub fn db_test() {
-//     let foo:Entry = Entry {
-//         acronym: String::from("TLA"),
-//         description: String::from("Three Letter Acronym"),
-//     };
+    let mut entries: HashMap<String, Entry> = HashMap::new();
+    entries.insert(foo.acronym.clone(), foo.clone());
+    entries.insert(bar.acronym.clone(), bar.clone());
 
-//     let bar:Entry = Entry {
-//         acronym: String::from("CIA"),
-//         description: String::from("Central Intelligence Agency"),
-//     };
+    let builder = Builder::new();
+    // Generate a temporary file path without creating the file
+    let temp_path = builder
+        .tempdir()
+        .expect("Failed to create temporary directory")
+        .into_path()
+        .join("tempfile");
 
-//     let entries = HashMap::from([(foo.acronym.clone(), foo), (bar.acronym.clone(), bar)]);
+    assert!(!temp_path.exists());
 
-//     write_entries(entries);
+    write_entries_with_path(entries, &temp_path);
 
-//     let entries_read: HashMap<String, Entry> = read_entries();
-//     let read_foo: &Entry = entries_read.get("TLA").unwrap();
-//     let read_bar = entries_read.get("CIA").unwrap();
-//     println!("{read_foo:#?}");
-//     println!("{read_bar:#?}");
+    let entries_read: HashMap<String, Entry> = read_entries_with_path(&temp_path);
+    
+    let read_foo = entries_read.get("TLA").expect("TLA entry not found");
+    assert_eq!(read_foo.acronym, foo.acronym);
+    assert_eq!(read_foo.descriptions, foo.descriptions);
 
-// }
+    let read_bar = entries_read.get("CIA").expect("CIA entry not found");
+    assert_eq!(read_bar.acronym, bar.acronym);
+    assert_eq!(read_bar.descriptions, bar.descriptions);
+
+}
 
 
 pub fn write_entries(entries: HashMap<String, Entry>) {
-    serde_yaml::to_writer(File::create(DB_PATH).unwrap(), &entries).unwrap();
+    write_entries_with_path(entries, &get_db_path())
+}
+
+pub fn write_entries_with_path(entries: HashMap<String, Entry>, filepath: &PathBuf) {
+    serde_yaml::to_writer(File::create(filepath).unwrap(), &entries).unwrap();
 }
 
 
 pub fn read_entries() -> HashMap<String,Entry> {
-    match File::open(DB_PATH) {
+    return read_entries_with_path(&get_db_path())
+}
+
+pub fn read_entries_with_path(filepath: &PathBuf) -> HashMap<String,Entry> {
+    match File::open(filepath) {
         Ok(f) => serde_yaml::from_reader(f).unwrap(),
         Err(e) => {
             match e.kind() {
@@ -64,4 +87,3 @@ pub fn read_entries() -> HashMap<String,Entry> {
         }
     }
 }
-
