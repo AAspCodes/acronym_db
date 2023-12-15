@@ -13,7 +13,6 @@ fn main() {
     }
 }
 
-
 /// Adds a new entry or updates an existing one in the database.
 fn add(args: cli::Args) {
     println!("Adding stuff {:#?}", args);
@@ -30,4 +29,3 @@ fn add(args: cli::Args) {
 
     db::write_entries(entries);
 }
- 

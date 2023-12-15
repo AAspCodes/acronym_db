@@ -1,9 +1,7 @@
-
 use clap::{arg, builder::PossibleValue, Parser, ValueEnum};
 
-
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Debug)]
-pub enum Command{
+pub enum Command {
     Add,
     Delete,
 }
@@ -30,7 +28,6 @@ impl std::fmt::Display for Command {
     }
 }
 
-
 impl std::str::FromStr for Command {
     type Err = String;
 
@@ -43,7 +40,6 @@ impl std::str::FromStr for Command {
         Err(format!("invalid variant: {s}"))
     }
 }
-
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -64,7 +60,5 @@ pub struct Args {
 pub fn read_args() -> Args {
     let args = Args::parse();
     // println!("{:#?}", args);
-    return args
+    return args;
 }
-
-
