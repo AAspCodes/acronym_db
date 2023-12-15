@@ -5,8 +5,7 @@ use std::fs::File;
 use std::path::PathBuf;
 use tempfile::Builder;
 
-// const DB_PATH: &str = "./data/db.yaml";
-const DB_PATH: &str = &"./data/db.yaml";
+const DB_PATH: &str = "./data/db.yaml";
 
 fn get_db_path() -> PathBuf {
     return PathBuf::from(DB_PATH);
