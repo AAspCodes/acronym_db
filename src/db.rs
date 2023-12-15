@@ -5,40 +5,47 @@ use std::collections::HashMap;
 
 const DB_PATH: &str = "./data/db.yaml";
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Entry {
     acronym: String,
-    description: String,
+    descriptions: Vec<String>,
 }
 
 impl Entry {
     pub fn new(acronym: String, description: String) -> Entry {
-        Entry{acronym, description}
+        Entry{
+            acronym: acronym,
+            descriptions: vec![description],
+        }
+    }
+    pub fn push_descriptions(&mut self, description: String) {
+        self.descriptions.push(description)
     }
 }
 
-pub fn db_test() {
-    let foo:Entry = Entry {
-        acronym: String::from("TLA"),
-        description: String::from("Three Letter Acronym"),
-    };
 
-    let bar:Entry = Entry {
-        acronym: String::from("CIA"),
-        description: String::from("Central Intelligence Agency"),
-    };
+// pub fn db_test() {
+//     let foo:Entry = Entry {
+//         acronym: String::from("TLA"),
+//         description: String::from("Three Letter Acronym"),
+//     };
 
-    let entries = HashMap::from([(foo.acronym.clone(), foo), (bar.acronym.clone(), bar)]);
+//     let bar:Entry = Entry {
+//         acronym: String::from("CIA"),
+//         description: String::from("Central Intelligence Agency"),
+//     };
 
-    write_entries(entries);
+//     let entries = HashMap::from([(foo.acronym.clone(), foo), (bar.acronym.clone(), bar)]);
 
-    let entries_read: HashMap<String, Entry> = read_entries();
-    let read_foo: &Entry = entries_read.get("TLA").unwrap();
-    let read_bar = entries_read.get("CIA").unwrap();
-    println!("{read_foo:#?}");
-    println!("{read_bar:#?}");
+//     write_entries(entries);
 
-}
+//     let entries_read: HashMap<String, Entry> = read_entries();
+//     let read_foo: &Entry = entries_read.get("TLA").unwrap();
+//     let read_bar = entries_read.get("CIA").unwrap();
+//     println!("{read_foo:#?}");
+//     println!("{read_bar:#?}");
+
+// }
 
 
 pub fn write_entries(entries: HashMap<String, Entry>) {

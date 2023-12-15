@@ -14,10 +14,20 @@ fn main() {
 }
 
 
+/// Adds a new entry or updates an existing one in the database.
 fn add(args: cli::Args) {
-    println!("adding stuff {:#?}", args);
+    println!("Adding stuff {:#?}", args);
     let mut entries = db::read_entries();
-    let new_entry = db::Entry::new(args.acronym.clone(),args.description);
-    entries.insert(args.acronym, new_entry);
+
+    if let Some(entry) = entries.get_mut(&args.acronym) {
+        // Update existing entry
+        entry.push_descriptions(args.description);
+    } else {
+        // Create a new entry
+        let new_entry = db::Entry::new(args.acronym.clone(), args.description);
+        entries.insert(args.acronym, new_entry);
+    }
+
     db::write_entries(entries);
-} 
+}
+ 
