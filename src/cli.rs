@@ -58,7 +58,5 @@ pub struct Args {
 }
 
 pub fn read_args() -> Args {
-    let args = Args::parse();
-    // println!("{:#?}", args);
-    return args;
+    Args::parse()
 }

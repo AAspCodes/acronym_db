@@ -6,7 +6,7 @@ use std::path::PathBuf;
 const DB_PATH: &str = "./data/db.yaml";
 
 fn get_db_path() -> PathBuf {
-    return PathBuf::from(DB_PATH);
+    PathBuf::from(DB_PATH)
 }
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Entry {
@@ -17,7 +17,7 @@ pub struct Entry {
 impl Entry {
     pub fn new(acronym: String, description: String) -> Entry {
         Entry {
-            acronym: acronym,
+            acronym,
             descriptions: vec![description],
         }
     }
@@ -35,7 +35,7 @@ pub fn write_entries_with_path(entries: HashMap<String, Entry>, filepath: &PathB
 }
 
 pub fn read_entries() -> HashMap<String, Entry> {
-    return read_entries_with_path(&get_db_path());
+    read_entries_with_path(&get_db_path())
 }
 
 pub fn read_entries_with_path(filepath: &PathBuf) -> HashMap<String, Entry> {
